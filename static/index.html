@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>照片 / 视频去重工具</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1>📷 照片 / 视频去重</h1>
+  <p class="sub">按文件<b>内容</b>找出字节级完全相同的照片/视频，自动分流到「保留」和「重复」两个文件夹。<b>平铺存放</b>（不分子文件夹，重名自动加 (1)、(2) 编号），源文件夹全程不动。</p>
+</header>
+
+<main>
+  <!-- 1. 配置 -->
+  <section id="card-config" class="card">
+    <h2>① 选择文件夹</h2>
+    <div class="field">
+      <label>源文件夹（要整理的照片 / 视频）</label>
+      <div class="path-row">
+        <input id="in-root" placeholder="E:\project\del_same_picture\data" spellcheck="false">
+        <button data-browse="in-root">浏览…</button>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>保留文件夹（唯一内容放这里）</label>
+        <div class="path-row">
+          <input id="in-keep" placeholder="E:\photos\keep" spellcheck="false">
+          <button data-browse="in-keep">浏览…</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>重复文件夹（冗余副本放这里）</label>
+        <div class="path-row">
+          <input id="in-dup" placeholder="E:\photos\duplicates" spellcheck="false">
+          <button data-browse="in-dup">浏览…</button>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="btn-scan" class="primary">开始扫描</button>
+      <span id="config-error" class="error"></span>
+    </div>
+  </section>
+
+  <!-- 进度 -->
+  <section id="card-progress" class="card hidden">
+    <h2 id="progress-title">正在扫描…</h2>
+    <div class="bar"><div id="bar-fill"></div></div>
+    <div id="progress-text" class="mono"></div>
+    <div class="actions"><button id="btn-cancel">取消</button></div>
+  </section>
+
+  <!-- 2. 结果 -->
+  <section id="card-results" class="card hidden">
+    <h2>② 扫描结果</h2>
+    <div id="stats" class="stats"></div>
+    <div id="no-dup-hint" class="hint hidden">没有发现重复文件。仍可点击下方按钮，把所有文件（已是唯一内容）复制到保留文件夹。</div>
+    <div id="groups"></div>
+    <div id="uniques-box" class="uniques hidden">
+      <div class="uniques-head" id="uniques-toggle">▸ 另有 <span id="uniques-count">0</span> 个无重复的文件，将全部复制到保留文件夹</div>
+      <ul id="uniques-list" class="hidden"></ul>
+    </div>
+    <div class="actions">
+      <button id="btn-execute" class="primary">执行复制（源文件夹不会被修改）</button>
+      <button id="btn-back-config">返回修改</button>
+    </div>
+    <div class="hint">每组中绿框的是自动选出的保留者（更大 / 更早的文件优先）。想保留其他副本？点它即可换人。所有文件平铺复制到目标文件夹，同名自动加 (1)、(2) 编号。</div>
+  </section>
+
+  <!-- 3. 完成 -->
+  <section id="card-done" class="card hidden">
+    <h2>③ 完成</h2>
+    <div id="done-summary"></div>
+    <div class="actions">
+      <button id="btn-open-keep">打开保留文件夹</button>
+      <button id="btn-open-dup">打开重复文件夹</button>
+      <button id="btn-again" class="primary">再整理一个文件夹</button>
+    </div>
+  </section>
+</main>
+
+<!-- 文件夹浏览弹窗 -->
+<div id="browse-modal" class="modal hidden">
+  <div class="modal-box">
+    <h3>选择文件夹</h3>
+    <div class="path-row">
+      <input id="browse-input" spellcheck="false">
+      <button id="browse-goto">转到</button>
+    </div>
+    <div id="browse-current" class="mono"></div>
+    <div id="browse-list" class="browse-list"></div>
+    <div class="actions">
+      <button id="browse-up">⬆ 上级</button>
+      <span class="spacer"></span>
+      <button id="browse-cancel">取消</button>
+      <button id="browse-pick" class="primary">选择此文件夹</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

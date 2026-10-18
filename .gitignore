@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# 打包产物（用 照片去重.spec 可重新生成）
+build/
+dist/
+
+# 程序运行产生的输出与本地测试数据（不上传）
+output/
+output_*/
+data/
+
+# 测试临时目录
+test_tmp_src/
+
+# ZCode 会话文件
+.zcode/
